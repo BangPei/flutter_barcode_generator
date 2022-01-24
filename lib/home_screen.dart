@@ -10,7 +10,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? _dataCode;
+  String? _dataCode = "1234567890";
+  final int _dataCount = 0;
+  final List<Widget> _barcodeWidget = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,22 +48,45 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: const SizedBox(height: 20),
                       ),
                       BootstrapCol(
-                        sizes: 'col-12',
-                        child: BarcodeWidget(
-                          barcode: Barcode.code128(escapes: true),
-                          data: _dataCode ?? "",
-                          width: 400,
-                          height: 160,
+                        child: BootstrapRow(
+                          children: [
+                            BootstrapCol(
+                              sizes: 'col-6 col-sm-6',
+                              child: const Text("Copy : "),
+                            ),
+                            BootstrapCol(
+                              sizes: 'col-6 col-sm-6',
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                              ),
+                            )
+                          ],
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
                 BootstrapCol(
-                  sizes: 'col-md-8',
-                  child: const ContentWidget(
-                    text: 'col 2 of 2',
-                    color: Colors.red,
+                  sizes: 'col-md-8 col-sm-12',
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        crossAxisCount: 5,
+                        childAspectRatio: 1.5,
+                        crossAxisSpacing: 12,
+                        children: _barcodeWidget.map((e) {
+                          return BarcodeWidget(
+                            barcode: Barcode.code128(escapes: true),
+                            data: _dataCode ?? "",
+                            width: 20,
+                            height: 50,
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -70,26 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
           fluid: true,
         ),
       ),
-    );
-  }
-}
-
-class ContentWidget extends StatelessWidget {
-  const ContentWidget({
-    Key? key,
-    required this.text,
-    required this.color,
-  }) : super(key: key);
-
-  final String text;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      color: color,
-      child: Text(text),
     );
   }
 }
